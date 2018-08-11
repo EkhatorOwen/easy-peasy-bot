@@ -1,3 +1,6 @@
+require('dotenv').config()
+const axios = require('axios')
+
 /**
  * A Bot for Slack!
  */
@@ -87,6 +90,19 @@ controller.on('bot_channel_join', function (bot, message) {
 
 controller.hears('hello', 'direct_message', function (bot, message) {
     bot.reply(message, 'Hello!');
+});
+
+controller.hears(['hello','hi','greetings'], ['direct_message','mention','direct_mention'], function (bot, message) {
+    bot.reply(message, 'Hello!');
+});
+
+controller.hears('what is the weather today?', ['direct_message','mention','direct_mention'], function (bot, message) {
+    axios.get(`http://api.openweathermap.org/data/2.5/weather?q=dallas&appid=${process.env.API_KEY}`)
+         .then(response=>{
+             console.log(response)
+          bot.reply(message, `the weather is `);
+         })
+         .catch(err=>console.log(err))
 });
 
 
