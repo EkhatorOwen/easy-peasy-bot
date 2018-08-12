@@ -99,8 +99,20 @@ controller.hears(['hello','hi','greetings'], ['direct_message','mention','direct
 controller.hears('what is the weather today?', ['direct_message','mention','direct_mention'], function (bot, message) {
     axios.get(`http://api.openweathermap.org/data/2.5/weather?q=dallas&appid=${process.env.API_KEY}`)
          .then(response=>{
-             console.log(response)
-          bot.reply(message, `the weather is `);
+           
+          bot.reply(message, `The description of the weather today is ${response.data.weather[0].description} `);
+         })
+         .catch(err=>console.log(err))
+});
+
+controller.hears('what is the weather in (.*)', ['direct_message','mention','direct_mention'], function (bot, message) {
+    let query = message.match[1].match('/[a-zA-Z]+/g')
+    console.log(query)
+    axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${message.match[1]}&appid=${process.env.API_KEY}`)
+         .then(response=>{
+           //  console.log(message)
+           console.log(message.match[1])
+          bot.reply(message, `The description of the weather today is ${response.data.weather[0].description} `);
          })
          .catch(err=>console.log(err))
 });
