@@ -93,28 +93,39 @@ controller.hears('hello', 'direct_message', function (bot, message) {
 });
 
 controller.hears(['hello','hi','greetings'], ['direct_message','mention','direct_mention'], function (bot, message) {
+    
     bot.reply(message, 'Hello!');
 });
 
-controller.hears('what is the weather today?', ['direct_message','mention','direct_mention'], function (bot, message) {
-    axios.get(`http://api.openweathermap.org/data/2.5/weather?q=dallas&appid=${process.env.API_KEY}`)
+// controller.hears('what is the weather today?', ['direct_message','mention','direct_mention'], function (bot, message) {
+//     bot.reply(message,'what is your current location?')
+        
+
+
+//     axios.get(`http://api.openweathermap.org/data/2.5/weather?q=dallas&appid=${process.env.API_KEY}`)
+//          .then(response=>{
+           
+
+//           bot.reply(message, `The description of the weather today is ${response.data.weather[0].description} `);
+//          })
+//          .catch(err=>console.log(err))
+// });
+
+controller.hears('what is the weather in (.*)', ['direct_message','mention','direct_mention'], function (bot, message) {
+  
+    let query = message.match[1].match(/[a-zA-Z]+/g)
+    
+    axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${query[0]}&appid=${process.env.API_KEY}`)
          .then(response=>{
            
+           
+         
           bot.reply(message, `The description of the weather today is ${response.data.weather[0].description} `);
          })
          .catch(err=>console.log(err))
 });
-
-controller.hears('what is the weather in (.*)', ['direct_message','mention','direct_mention'], function (bot, message) {
-    let query = message.match[1].match('/[a-zA-Z]+/g')
-    console.log(query)
-    axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${message.match[1]}&appid=${process.env.API_KEY}`)
-         .then(response=>{
-           //  console.log(message)
-           console.log(message.match[1])
-          bot.reply(message, `The description of the weather today is ${response.data.weather[0].description} `);
-         })
-         .catch(err=>console.log(err))
+controller.hears(['Thanks','thank you'], ['direct_message','mention','direct_mention'], function (bot, message) {
+          bot.reply(message, `You are welcome!`);    
 });
 
 
